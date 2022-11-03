@@ -9,26 +9,10 @@ const toggleLocales = () => {
 </script>
 
 <template>
-  <nav text-xl mt-6>
-    <RouterLink class="icon-btn mx-2" to="/" :title="t('button.home')">
-      <!-- <div i-carbon-campsite /> -->
-      {{ t("button.home") }}
-    </RouterLink>
-
-    <RouterLink class="icon-btn mx-2" to="/about" :title="t('button.about')">
-      {{ t("button.about") }}
-    </RouterLink>
-
-    <RouterLink class="icon-btn mx-2" to="/case" :title="t('button.case')">
-      {{ t("button.case") }}
-    </RouterLink>
-
-    <RouterLink
-      class="icon-btn mx-2"
-      to="/contact"
-      :title="t('button.contact')"
-    >
-      {{ t("button.contact") }}
+  <nav class="text-xl flex items-center">
+    <Logo />
+    <RouterLink class="mx-2" to="/dashboard" :title="t('button.login')">
+      {{ t("button.login") }}
     </RouterLink>
   </nav>
 </template>

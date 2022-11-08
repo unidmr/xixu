@@ -1,9 +1,9 @@
 <template>
   <!-- 默认页面模版 -->
   <div class="min-h-screen">
-    <BaseHeader />
+    <DefaultHeader />
     <div class="flex">
-      <BaseSide />
+      <DefaultSide />
       <div class="p-4">
         <RouterView />
       </div>

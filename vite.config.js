@@ -1,4 +1,3 @@
-import path from "path";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import Page from "vite-plugin-pages";
@@ -9,6 +8,14 @@ import Components from "unplugin-vue-components/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import VueI18n from "@intlify/vite-plugin-vue-i18n";
 import { version as pkgVersion } from "./package.json";
+import Unocss from "unocss/vite";
+import {
+  presetAttributify,
+  presetIcons,
+  presetUno,
+  transformerDirectives,
+  transformerVariantGroup,
+} from "unocss";
 
 process.env.VITE_APP_VERSION = pkgVersion;
 if (process.env.NODE_ENV === "production") {
@@ -16,13 +23,18 @@ if (process.env.NODE_ENV === "production") {
 }
 // 详细文档 https://vitejs.dev/config/
 export default defineConfig({
+  resolve: {
+    alias: {
+      "@": resolve(__dirname, "./src"),
+    },
+  },
   plugins: [
     vue(),
     Page({
       // 指定需要生成路由的文件夹
       dirs: [
-        { dir: "src/pages", baseRoute: "" },
-        { dir: "src/views", baseRoute: "" },
+        { dir: "./src/pages", baseRoute: "" },
+        { dir: "./src/views", baseRoute: "" },
       ],
       // 全局路由加载方式async/sync
       importMode: "async",
@@ -30,7 +42,8 @@ export default defineConfig({
     Layouts(),
     // 详细文档 https://github.com/antfu/unplugin-vue-components
     Components({
-      dirs: ["src/components"],
+      dirs: ["./src/components", "./src/components/*"],
+      deep: false,
       extensions: ["vue"],
       resolvers: [
         ElementPlusResolver({
@@ -41,12 +54,13 @@ export default defineConfig({
     // 详细文档 https://github.com/antfu/unplugin-auto-import/blob/main/src/types.ts
     AutoImport({
       include: [
-        /\.[jt]sx?$/, // .ts, .tsx, .js, .jsx
+        /\.js?$/, // .js
         /\.vue$/,
         /\.vue\?vue/, // .vue
         /\.md$/, // .md
       ],
-      dirs: ["./src/composables/"],
+      dirs: ["./src/composables"],
+      vueTemplate: true,
       imports: [
         "vue",
         "vue-router",
@@ -75,12 +89,26 @@ export default defineConfig({
     VueI18n({
       runtimeOnly: true,
       compositionOnly: true,
-      include: [path.resolve(__dirname, "./src/locales/**")],
+      include: [resolve(__dirname, "./src/locales/**")],
+    }),
+    // 详细文档 https://github.com/antfu/unocss
+    Unocss({
+      presets: [
+        presetUno(),
+        presetAttributify(),
+        presetIcons({
+          scale: 1.2,
+          warn: true,
+        }),
+      ],
+      transformers: [transformerDirectives(), transformerVariantGroup()],
     }),
   ],
-  resolve: {
-    alias: {
-      "@": resolve(__dirname, "./src"),
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@use "@/styles/element/index.scss" as *;`,
+      },
     },
   },
 });

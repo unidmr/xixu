@@ -1,4 +1,4 @@
-export const install = ({ isClient, initialState, app }) => {
+export const install = ({ app }) => {
   const pinia = createPinia();
   app.use(pinia);
 };
